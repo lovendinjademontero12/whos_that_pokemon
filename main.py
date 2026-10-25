@@ -1,16 +1,18 @@
 import random
 import requests
 
-pokemon_id = random.randint(1, 1000)
+#added list for the pokemon choice idea
+pokemon_list = ["pikachu", "charmander", "bulbasaur", "squirtle", "snorlax"]
+name = random.choice(pokemon_list)
 
-#fetch the data from the API
+#data fetch from the API
 try:
-    response = requests.get("https://pokeapi.co/api/v2/pokemon/" + str(pokemon_id))
+    response = requests.get("https://pokeapi.co/api/v2/pokemon/" + name)
 except requests.exceptions.RequestException:
     print("Network error.")
     exit()
 
-#match casing for the error handling and alongside the game structure
+#match casing for the error handling and the game logic
 match response.status_code:
     case 200:
         data = response.json()
@@ -18,11 +20,18 @@ match response.status_code:
         height = data["height"]
         weight = data["weight"]
 
+        #prints the height and weight but not the name, also included the choices in the print
         print("Who's that Pokemon?")
         print("Height:", height)
         print("Weight:", weight)
+        print("Choices:", ", ".join(pokemon_list))
 
         guess = input("Your guess: ")
 
+        #guess result check
+        if guess == real_name:
+            print("Correct!")
+        else:
+            print("Wrong!")
     case _:
         print("Something went wrong:", response.status_code)
